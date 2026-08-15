@@ -1,0 +1,84 @@
+/* 
+ * Review Detector Injected CSS (styles.css)
+ * Styling for badges injected next to product reviews.
+ * Uses emerald/green for genuine reviews, red for fake reviews, and violet for the loading spinner.
+ */
+
+.review-detector-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin-left: 10px;
+  margin-bottom: 8px;
+  vertical-align: middle;
+  transition: all 0.3s ease;
+  user-select: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Genuine Reviews Badge (Emerald/Green Theme) */
+.review-detector-badge.genuine {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.review-detector-badge.genuine .review-detector-dot {
+  background-color: #10b981;
+  box-shadow: 0 0 8px #10b981;
+}
+
+/* Fake Reviews Badge (Red Theme) */
+.review-detector-badge.fake {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.review-detector-badge.fake .review-detector-dot {
+  background-color: #ef4444;
+  box-shadow: 0 0 8px #ef4444;
+}
+
+/* Loading State Badge (Purple/Violet Theme) */
+.review-detector-badge.loading {
+  background-color: rgba(139, 92, 246, 0.08);
+  color: #8b5cf6;
+  border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+/* Error State Badge (Amber Theme) */
+.review-detector-badge.error {
+  background-color: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+/* Dot element inside result badges */
+.review-detector-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* Spinner element for loading badge */
+.review-detector-spinner {
+  width: 10px;
+  height: 10px;
+  border: 2px solid rgba(139, 92, 246, 0.2);
+  border-top: 2px solid #8b5cf6;
+  border-radius: 50%;
+  display: inline-block;
+  animation: rd-spin 0.8s linear infinite;
+}
+
+@keyframes rd-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mock Product Reviews</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 20px;
+      background-color: #f3f4f6;
+      color: #1f2937;
+    }
+    h1 {
+      border-bottom: 2px solid #e5e7eb;
+      padding-bottom: 10px;
+      color: #111827;
+    }
+    .review {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+    }
+    .review-title {
+      font-weight: bold;
+      font-size: 1.2em;
+      display: inline-block;
+      margin-bottom: 8px;
+      color: #111827;
+    }
+    .review-text {
+      font-size: 1em;
+      line-height: 1.6;
+      color: #4b5563;
+      display: block;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Product Reviews Test Page</h1>
+
+  <!-- Amazon-like Genuine Review -->
+  <div data-hook="review" class="review" id="review-1">
+    <span data-hook="review-title" class="review-title">Excellent coffee maker</span>
+    <span data-hook="review-body" class="review-text">
+      I bought this coffee maker last week and it has been great. The coffee is hot and it brews quickly. The only downside is that it is a bit loud, but overall it is sturdy and does the job well.
+    </span>
+  </div>
+
+  <!-- Amazon-like Fake Review -->
+  <div data-hook="review" class="review" id="review-2">
+    <span data-hook="review-title" class="review-title">WOW AMAZING BEST EVER!!!</span>
+    <span data-hook="review-body" class="review-text">
+      WOW!!! BEST PRODUCT EVER!!! BUY IT NOW!!! AMAZING QUALITY!!! WOW!!! BUY IT NOW!!! MUST BUY!!! WOW!!! BEST PRODUCT EVER!!! BUY IT NOW!!!
+    </span>
+  </div>
+</body>
+</html>

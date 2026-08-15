@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fake Review Detector - AI Dashboard</title>
+    <!-- Google Fonts: Outfit for heading, Inter for body -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=9">
+</head>
+<body>
+    <div id="top-loading-bar" class="top-loading-bar"></div>
+    <div class="background-glow bg-glow-violet"></div>
+    <div class="background-glow bg-glow-indigo"></div>
+
+    <div class="app-container">
+        <!-- Navigation Header -->
+        <header class="app-header">
+            <nav class="nav-bar">
+                <div class="logo-area">
+                    <span class="logo-icon">🛡️</span>
+                    <h1>ReviewShield <span class="badge">AI</span></h1>
+                </div>
+                <div class="nav-right">
+                    <ul class="nav-links">
+                        <li><a href="#dashboard-anchor" id="nav-btn-analyzer" class="nav-link active">Analyzer</a></li>
+                        <li><button id="nav-btn-history" class="nav-link btn-nav-link">History</button></li>
+                    </ul>
+                    <div class="nav-divider"></div>
+                    <div class="auth-buttons" id="auth-nav-container">
+                        <button id="btn-login-modal" class="btn btn-secondary btn-nav-link">Sign In</button>
+                        <button id="btn-register-modal" class="btn btn-primary">Sign Up</button>
+                    </div>
+                    <div class="user-profile hidden" id="user-profile-container">
+                        <span class="user-avatar">👤</span>
+                        <span class="user-name" id="user-display-name">Guest</span>
+                        <button id="btn-logout" class="btn btn-secondary btn-nav-link text-red">Sign Out</button>
+                    </div>
+                </div>
+            </nav>
+            <p class="subtitle" style="margin-top: 0.75rem;">Analyze product reviews using Natural Language Processing and Machine Learning heuristics.</p>
+        </header>
+
+        <!-- Main Dashboard Layout -->
+        <div class="dashboard-grid" id="dashboard-anchor">
+            
+            <!-- Left Panel: Input & Presets -->
+            <section class="card input-card">
+                <div class="card-header">
+                    <h2>Review Input Analyzer</h2>
+                    <span class="step-indicator">Step 1</span>
+                </div>
+                
+                <div class="presets-section">
+                    <p class="section-label">Select a sample review template:</p>
+                    <div class="presets-buttons">
+                        <button type="button" class="btn btn-preset" data-preset="gen-electronics">Genuine Vacuum</button>
+                        <button type="button" class="btn btn-preset" data-preset="fake-electronics">Fake Vacuum</button>
+                        <button type="button" class="btn btn-preset" data-preset="gen-hotel">Genuine Hotel</button>
+                        <button type="button" class="btn btn-preset" data-preset="fake-hotel">Fake Hotel</button>
+                    </div>
+                </div>
+
+                <div class="input-form">
+                    <label for="review-textarea" class="visually-hidden">Review Text</label>
+                    <textarea id="review-textarea" placeholder="Paste or type a product review here to analyze (minimum 5 words)..."></textarea>
+                    
+                    <div class="input-actions">
+                        <span id="char-word-count">0 words | 0 chars</span>
+                        <div class="button-group">
+                            <button id="btn-clear" class="btn btn-secondary">Clear</button>
+                            <button id="btn-analyze" class="btn btn-primary">
+                                <span class="btn-text">Analyze Review</span>
+                                <span class="spinner hidden"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Panel: Core Verdict & Metrics -->
+            <section class="card results-card" id="results-section">
+                <!-- Welcome/Initial Placeholder state -->
+                <div id="results-placeholder" class="placeholder-state">
+                    <div class="placeholder-icon">🔍</div>
+                    <h3>Awaiting Analysis</h3>
+                    <p>Enter review text on the left and click "Analyze Review" to run the NLP parser and ML classification models.</p>
+                </div>
+
+                <!-- Results Loading State (progress bar instead of spinner) -->
+                <div id="results-loader" class="results-loader hidden">
+                    <div class="loader-content">
+                        <div class="loader-icon-glow">⚡</div>
+                        <h3>AI Classification Pipeline</h3>
+                        <p id="loader-status">Tokenizing and cleaning text...</p>
+                        <div class="progress-track">
+                            <div class="progress-fill" id="loader-progress-fill"></div>
+                        </div>
+                        <span class="progress-label" id="loader-progress-pct">0%</span>
+                    </div>
+                </div>
+
+                <!-- Analysis Loaded State (hidden by default) -->
+                <div id="results-content" class="hidden">
+                    <div class="verdict-banner" id="verdict-banner">
+                        <div class="verdict-status">
+                            <span class="verdict-icon" id="verdict-icon">🛡️</span>
+                            <div>
+                                <h3 id="verdict-title">Review Verdict</h3>
+                                <p id="verdict-subtitle">Analyzing...</p>
+                            </div>
+                        </div>
+                        <div class="confidence-box">
+                            <div class="radial-progress-container">
+                                <svg class="radial-progress" width="80" height="80">
+                                    <circle class="bg" cx="40" cy="40" r="34"></circle>
+                                    <circle class="fg" id="confidence-circle" cx="40" cy="40" r="34"></circle>
+                                </svg>
+                                <span class="percentage" id="confidence-percentage">0%</span>
+                            </div>
+                            <span class="label">Confidence</span>
+                        </div>
+                    </div>
+
+                    <!-- Highlights, Signals, XAI and Tokens -->
+                    <div class="results-inner-layout">
+                        <!-- Preprocessing & Text Markers -->
+                        <div class="signal-details">
+                            <h4>NLP Preprocessing & Text Markers</h4>
+                            <div class="metric-grid">
+                                <div class="metric-row">
+                                    <div class="metric-label">
+                                        <span>Repetitiveness Index</span>
+                                        <span class="info-tooltip" title="Ratio of repeated words. Fake reviews often repeat generic words or phrases.">ℹ️</span>
+                                    </div>
+                                    <div class="metric-bar-container">
+                                        <div class="metric-bar bg-amber" id="bar-repetitiveness" style="width: 0%"></div>
+                                    </div>
+                                    <span class="metric-value" id="val-repetitiveness">0%</span>
+                                </div>
+
+                                <div class="metric-row">
+                                    <div class="metric-label">
+                                        <span>Shouting Factor (ALL CAPS)</span>
+                                        <span class="info-tooltip" title="Ratio of uppercase characters. Spam reviews often shout product names in capital letters.">ℹ️</span>
+                                    </div>
+                                    <div class="metric-bar-container">
+                                        <div class="metric-bar bg-purple" id="bar-shouting" style="width: 0%"></div>
+                                    </div>
+                                    <span class="metric-value" id="val-shouting">0%</span>
+                                </div>
+
+                                <div class="metric-row">
+                                    <div class="metric-label">
+                                        <span>Exclamation Density</span>
+                                        <span class="info-tooltip" title="Frequency of exclamation marks. Overly dramatic fake reviews contain excessive exclamation counts.">ℹ️</span>
+                                    </div>
+                                    <div class="metric-bar-container">
+                                        <div class="metric-bar bg-red" id="bar-exclamation" style="width: 0%"></div>
+                                    </div>
+                                    <span class="metric-value" id="val-exclamation">0%</span>
+                                </div>
+
+                                <div class="metric-row">
+                                    <div class="metric-label">
+                                        <span>Sentiment extremity</span>
+                                        <span class="info-tooltip" title="Strength of sentiment polarity. Fake reviews are often excessively positive or negative competitor bashing.">ℹ️</span>
+                                    </div>
+                                    <div class="metric-bar-container">
+                                        <div class="metric-bar bg-cyan" id="bar-sentiment" style="width: 0%"></div>
+                                    </div>
+                                    <span class="metric-value" id="val-sentiment">0.0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Explainable AI Reasoning -->
+                    <div class="xai-reasoning-section">
+                        <h4>🧠 AI Decision Explanation (Explainable AI)</h4>
+                        
+                        <!-- Premium Action Button to Load/Reveal Explanation -->
+                        <div class="xai-placeholder" id="xai-placeholder">
+                            <button id="btn-reveal-xai" class="btn btn-primary btn-xai">
+                                <span>🧠 Generate AI Explanation</span>
+                            </button>
+                            <p class="xai-placeholder-tip">Click to compute feature contributions and natural language heuristics.</p>
+                        </div>
+
+                        <div class="xai-container hidden" id="xai-container-body">
+                            <div class="xai-summary-card">
+                                <span class="xai-icon">🔍</span>
+                                <div class="xai-summary-text" id="xai-summary">
+                                    <!-- AI explanation paragraph injected dynamically -->
+                                </div>
+                            </div>
+                            <div class="xai-factors-grid">
+                                <div class="xai-factor-card genuine-factors">
+                                    <h5>🛡️ Organic Evidence (Supports Genuine)</h5>
+                                    <ul id="xai-genuine-list">
+                                        <!-- List of organic indicators -->
+                                    </ul>
+                                </div>
+                                <div class="xai-factor-card fake-factors">
+                                    <h5>⚠️ Suspicious Evidence (Supports Fake)</h5>
+                                    <ul id="xai-fake-list">
+                                        <!-- List of suspicious indicators -->
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Consolidated Text Analysis Tabs -->
+                    <div class="nlp-viewer">
+                        <div class="tabs-header">
+                            <button class="tab-btn active" data-tab="tab-highlights">Word Highlights</button>
+                            <button class="tab-btn" data-tab="tab-tokens">Word Tokens</button>
+                            <button class="tab-btn" data-tab="tab-clean">Clean Tokens</button>
+                        </div>
+                        <div class="tabs-content">
+                            <!-- Highlights Tab -->
+                            <div id="tab-highlights" class="tab-pane active">
+                                <p class="explanation">Words colored by prediction influence: <span class="badge-gen">Green (Genuine)</span> vs <span class="badge-fake">Red (Suspicious)</span>.</p>
+                                <div class="text-highlighter-box" id="highlighted-text">
+                                    <!-- Preprocessed text colored spans injected here -->
+                                </div>
+                            </div>
+                            <!-- Tokens Tab -->
+                            <div id="tab-tokens" class="tab-pane">
+                                <div class="tokens-list" id="tokens-container"></div>
+                            </div>
+                            <!-- Clean Tokens Tab -->
+                            <div id="tab-clean" class="tab-pane">
+                                <div class="tokens-list" id="clean-tokens-container"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p>Fake Review Detector • Built using Python, FastAPI, NLTK, Scikit-learn, & Vanilla HTML/CSS/JS</p>
+        </footer>
+    </div>
+
+    <!-- Authentication Modal -->
+    <div class="modal-overlay hidden" id="auth-modal">
+        <div class="card modal-card">
+            <button class="modal-close" id="modal-close-btn">&times;</button>
+            <h2 class="modal-title" id="auth-modal-title">Sign In</h2>
+            
+            <div class="modal-slider-viewport">
+                <div class="modal-slider-track" id="auth-modal-track">
+                    <!-- Login Form -->
+                    <div class="modal-pane active" id="login-pane">
+                        <form id="login-form" class="modal-form">
+                            <div class="form-group">
+                                <label for="login-email">Email Address</label>
+                                <input type="email" id="login-email" required placeholder="name@domain.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="login-password">Password</label>
+                                <input type="password" id="login-password" required placeholder="••••••••">
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-full-width">Sign In</button>
+                            <p class="form-toggle-text">Don't have an account? <span class="form-toggle-link" id="link-to-signup">Sign Up</span></p>
+                        </form>
+                    </div>
+                    
+                    <!-- Register Form -->
+                    <div class="modal-pane" id="signup-pane">
+                        <form id="signup-form" class="modal-form">
+                            <div class="form-group">
+                                <label for="signup-name">Full Name</label>
+                                <input type="text" id="signup-name" required placeholder="John Doe">
+                            </div>
+                            <div class="form-group">
+                                <label for="signup-email">Email Address</label>
+                                <input type="email" id="signup-email" required placeholder="name@domain.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="signup-password">Password</label>
+                                <input type="password" id="signup-password" required placeholder="••••••••">
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-full-width">Create Account</button>
+                            <p class="form-toggle-text">Already have an account? <span class="form-toggle-link" id="link-to-login">Sign In</span></p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- History Modal -->
+    <div class="modal-overlay hidden" id="history-modal">
+        <div class="card modal-card history-modal-card">
+            <button class="modal-close" id="history-close-btn">&times;</button>
+            <h2>Analysis History</h2>
+            <p class="explanation">Past reviews you have analyzed in this session (stored locally).</p>
+            <div class="history-list" id="history-items-container">
+                <!-- Loaded dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js?v=9"></script>
+</body>
+</html>
